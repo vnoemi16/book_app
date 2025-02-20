@@ -1,0 +1,54 @@
+.main{
+    display: flex;
+    flex-direction: row;
+    padding: 2rem;
+}
+
+.bookInfo{
+    margin:1rem;
+    
+}
+
+form{
+    position: fixed;
+    z-index: 800;
+    top: 10%;
+    left: 25%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 400px;
+    max-width: 90%;
+    margin-left: -100px;
+    background-color: var(--lightest);
+    padding: 1rem;
+    margin: auto;
+}
+
+input, textarea{
+    width: 100%;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+textarea{
+    height: 5rem;
+    resize: none;
+}
+
+button {
+    padding: 10px;
+    margin: 0.2rem;
+    background: var(--dark);
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+  }
+
+  .admin{
+    float:right
+  }

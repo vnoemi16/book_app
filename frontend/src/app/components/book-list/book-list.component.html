@@ -1,0 +1,18 @@
+<app-search-form (searchSubmitted)="handleSearch($event)"></app-search-form>
+<button>Könyv hozzáadása</button>
+<div class="list">
+    @for(book of books(); track book._id){
+        <div class="book" (click)="openBook(book._id)">
+            <h3>{{ book.title }}</h3>
+            <p><strong>Szerzők:</strong> {{ book.authors.join(', ') }}</p>
+            <p><strong>Megjelenés:</strong> {{ book.published | date }}</p>
+            <div class="genres">
+                @for(genre of book.genres; track genre){
+                    <div class="genre">{{genre}}</div>
+                }
+            </div>
+            
+        </div>
+    }
+
+</div>

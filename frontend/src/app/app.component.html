@@ -1,0 +1,12 @@
+<div class="menu">
+    @if(authService.currentUserSig() != null){
+        <a>Listám</a>
+        <button>Kijelentkezés</button>
+    }
+    @if(authService.currentUserSig() == null){
+        <a routerLink="/login">Bejelentkezés</a>
+        <a routerLink="/signup">Regisztráció</a>
+    }
+</div>
+
+<router-outlet />

@@ -1,0 +1,52 @@
+<div class="main">
+    <div class="bookInfo">
+        <h1>
+            {{selectedBook.title}}
+        </h1>
+        <p>
+            {{selectedBook.authors.join(", ")}}
+            Megjelenés éve: {{selectedBook.published | date: "yyyy"}}
+        </p>
+        <p>
+            {{selectedBook.genres.join(", ")}}
+        </p>
+        <p>
+            {{selectedBook.description}}
+        </p>
+    </div>
+    <div class="right">
+        <div class="admin">
+            <button (click)="deleteBook()">Könyv törlése</button>
+            <button (click)="openUpdate()">{{updateButton}}</button>
+            @if(updating){
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <label>Cím</label>
+                    <input type="text" formControlName="title" required>
+        
+                    <label>Szerzők (vesszővel elválasztva)</label>
+                    <input type="text" formControlName="authors" required>
+        
+                    <label>Megjelenés dátuma</label>
+                    <input type="date" formControlName="published" required>
+        
+                    <label>Leírás</label>
+                    <textarea formControlName="description" required></textarea>
+        
+                    <app-multi-dropdown (genresChanged)="genresChanged($event)"></app-multi-dropdown>
+        
+                    <button type="submit" [disabled]="form.invalid">Mentés</button>
+                </form>
+            }
+        </div>
+        
+        
+        <div class="bookReview">
+            <app-reviews></app-reviews>
+        </div>
+    </div>
+
+
+
+
+</div>
+

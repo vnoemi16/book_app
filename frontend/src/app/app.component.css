@@ -1,0 +1,39 @@
+.menu{
+    width: 100%;
+    z-index: 999;
+    background-color: var(--darkest);
+    color: white;
+    display: flex;
+    padding: 0.7rem;
+    display: flex;
+}
+
+.menu button, .menu a{
+    width: fit-content;
+    display: inline;
+    padding: 0.3rem 0.5rem;
+    margin: 0 0.2rem;
+    font-size: 16px;
+    border: 1px solid white;
+    border-radius: 3px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: var(--darkest);
+}
+
+
+.menu a:visited{
+    color: white;
+    text-decoration: none;
+}
+
+.menu a:hover, .menu button:hover{
+    color: var(--light);
+    text-decoration: none;
+}
+
+.menu a:active{
+    color: white;
+    text-decoration: none;
+}

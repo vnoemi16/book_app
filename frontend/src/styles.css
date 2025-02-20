@@ -1,0 +1,19 @@
+:root {
+    --darkest: #30424F;
+    --dark: #3B6064;
+    --middle: #678c93;
+    --light: #87BBA2;
+    --lightest: #EAF5EA;
+
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    overflow-x: hidden;
+}

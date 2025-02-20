@@ -1,0 +1,15 @@
+<div class="dropdown">
+    <button type="button" class="dropdown-button" (click)="toggleDropdown()">
+        Műfajok...
+    </button>
+    @if(dropdownOpen){
+    <div class="dropdown-menu">
+        @for(g of genreList; track g){
+        <div class="dropdown-item">
+            <input type="checkbox" [value]="g" (change)="onGenreChange($event)">
+            <span class="genre-label">{{ g }}</span>
+        </div>
+        }
+    </div>
+    }
+</div>
