@@ -1,0 +1,22 @@
+<div>
+    @if(isOpened){
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <button (click)="isOpened=false" class="closeButton">X</button>
+            <label>Cím</label>
+            <input type="text" formControlName="title" required>
+    
+            <label>Szerzők (vesszővel elválasztva)</label>
+            <input type="text" formControlName="authors" required>
+    
+            <label>Megjelenés dátuma</label>
+            <input type="date" formControlName="published" required>
+    
+            <label>Leírás</label>
+            <textarea formControlName="description" required></textarea>
+    
+            <app-multi-dropdown (genresChanged)="genresChanged($event)"></app-multi-dropdown>
+    
+            <button type="submit" [disabled]="form.invalid">Mentés</button>
+        </form>
+    }
+</div>
