@@ -1,3 +1,8 @@
+.ratings{
+    align-self: flex-end;
+    width: fit-content;
+}
+
 .rating {
     display: flex;
     flex-direction: row-reverse;
@@ -7,11 +12,58 @@
 
 .star {
     color: rgb(235, 235, 235);
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    -webkit-text-stroke: 1px black;
     transition: color 0.2s;
 }
 
 .star:hover,
 .star:hover~.star {
-    color: rgb(255, 230, 0);
+    color: gold;
+}
+
+.selected{
+    color: gold;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 400px;
+    max-width: 90%;
+    background-color: white;
+    border: 1px solid var(--darkest);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: auto;
+}
+
+label{
+    font-weight: bold;
+}
+
+input,
+textarea {
+    width: 100%;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+textarea {
+    height: 5rem;
+    resize: none;
+}
+
+button {
+    padding: 10px;
+    margin: 0.2rem;
+    background: var(--dark);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button[type="submit"]{
+    width: fit-content;
+    padding: 0.6rem 1rem;
+    align-self: flex-end;
 }

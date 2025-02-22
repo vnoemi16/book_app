@@ -1,7 +1,27 @@
-<div class="rating">
-    <span class="star" data-value="1">★</span>
-    <span class="star" data-value="2">★</span>
-    <span class="star" data-value="3">★</span>
-    <span class="star" data-value="4">★</span>
-    <span class="star" data-value="5">★</span>
+<div class="ratings">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <label>Vélemény</label>
+        <div class="rating">
+            @for(star of [5,4,3,2,1]; track star){
+                <span class="star" (click)="rate(star)" [class.selected]="star<=rating">
+                    ★
+                </span>
+            }
+        </div>
+        <textarea formControlName="review" required></textarea>
+        <button type="submit" [disabled]="form.invalid">Beküldés</button>
+    </form>
+    <div>Átlagos értékelés: {{averageRating}}</div>
+    <div>
+        <p>Legújabb értékelések:</p>
+        @for(review of reviews(); track review.user_id){
+            <div>
+                5/{{review.stars}}
+                ({{review.username}})
+                {{review.review}}
+            </div>
+        }
+    </div>
 </div>
+
+
