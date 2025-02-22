@@ -1,24 +1,56 @@
-<app-search-form (searchSubmitted)="handleSearch($event)"></app-search-form>
-@if(authService.currentUserSig()?.role == "admin"){
-    <button (click)="addingBook=true">Könyv hozzáadása</button>
-        <div class="addBook">
-            <app-input-book (bookSubmitted)="submitBook($event)" [isOpened]="addingBook"></app-input-book>
+<form [formGroup]="form" (ngSubmit)="searchBooks()">
+    <input type="text" formControlName="title" placeholder="Keresés címre...">
+    <input type="text" formControlName="author" placeholder="Keresés szerzőre...">
+    <app-multi-dropdown (genresChanged)="genresChanged($event)"></app-multi-dropdown>
+    <br>
+    <div>Rendezés:</div>
+    <div>
+        <input type="radio" id="o1" formControlName="order" value="title">
+        <label for="o1">Cím</label><br>
+        <input type="radio" id="o2" formControlName="order" value="date">
+        <label for="o2">Dátum</label><br>
+    </div>
+    <div style="display: flex; flex-direction: row; gap:0.3rem">
+        <div class="smallText">
+            Csökkenő
         </div>
-    
+        <label class="switch">
+            <input type="checkbox" formControlName="o">
+            <span class="slider"></span>
+        </label>
+        <div class="smallText">
+            Növekvő
+        </div>
+    </div>
+    <button type="submit" class="searchButton" [disabled]="form.controls.order.value==undefined">Keresés</button>
+    <button (click)="resetSearch()" class="reset">Törlés</button>
+</form>
+@if(authService.currentUserSig()?.role == "admin"){
+<div class="adminButtons">
+    <button (click)="addingBook=true">Könyv hozzáadása</button>
+    <div class="addBook">
+        <app-input-book (bookSubmitted)="submitBook($event)" [isOpened]="addingBook"></app-input-book>
+    </div>
+    <button>Műfaj hozzáadása</button>
+</div>
 }
 <div class="list">
     @for(book of books(); track book._id){
-        <div class="book" (click)="openBook(book._id)">
-            <h3>{{ book.title }}</h3>
-            <p><strong>Szerzők:</strong> {{ book.authors.join(', ') }}</p>
-            <p><strong>Megjelenés:</strong> {{ book.published | date }}</p>
-            <div class="genres">
-                @for(genre of book.genres; track genre){
-                    <div class="genre" [style.background-color]="genreList.get(genre)">{{genre}}</div>
-                }
-            </div>
-            
+    <div class="book" (click)="openBook(book._id)">
+        <h3>{{ book.title }}</h3>
+        <p><strong>Szerzők:</strong> {{ book.authors.join(', ') }}</p>
+        <p><strong>Megjelenés:</strong> {{ book.published | date }}</p>
+        <div class="genres">
+            @for(genre of book.genres; track genre){
+            <div class="genre" [style.background-color]="genreList.get(genre)">{{genre}}</div>
+            }
         </div>
-    }
 
+    </div>
+    }
+</div>
+<div class="pagination">
+    <button (click)="getPage(-1)">prev</button>
+    {{page}}/ {{maxpage}}
+    <button (click)="getPage(1)">next</button>
 </div>
