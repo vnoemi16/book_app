@@ -68,9 +68,9 @@ router.get("/books/:id/average", async (req, res) => {
         const { id } = req.params;
         const ratings = await Review.find({ book_id: id });
         if (ratings.length === 0) {
-            return res.status(404).json({ message: "No ratings found for this book" });
+            return res.status(200).json({ averageRating: 0 });
         }
-        const average = ratings.reduce((acc, rating) => acc + rating.rating, 0) / ratings.length;
+        const average = ratings.reduce((acc, rating) => acc + rating.stars, 0) / ratings.length;
         res.status(200).json({ averageRating: average.toFixed(2) });
     } catch (e) {
         res.status(500).json({ message: "An error has occured", error: e });
@@ -81,7 +81,7 @@ router.get("/books/:id/average", async (req, res) => {
 router.get("/books/:id/reviews", async (req, res) => {
     try {
       const { id } = req.params;
-      const reviews = await Review.find({ book_id: id }).sort({ published: -1 }).limit(10);;
+      const reviews = await Review.find({ book_id: id }).sort({ published: -1 }).limit(10);
       res.status(200).json(reviews);
     } catch (error) {
       res.status(500).json({ message: "Error occurred while fetching ratings", error });
