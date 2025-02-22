@@ -1,5 +1,6 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-multi-dropdown',
@@ -8,14 +9,20 @@ import { FormBuilder } from '@angular/forms';
   templateUrl: './multi-dropdown.component.html',
   styleUrl: './multi-dropdown.component.css'
 })
-export class MultiDropdownComponent {
+export class MultiDropdownComponent implements OnInit {
   @Output() genresChanged = new EventEmitter<any>();
+  dataService = inject(DataService);
 
-  genreList = ["életrajz", "fantasy", "horror", "kalandregény", "krimi", "novella", "romantikus", "sci-fi", "történelmi"]
+  genreList: Map<string, string> = new Map();
   dropdownOpen = false;
   selectedGenres: string[] = [];
 
-
+  ngOnInit(): void {
+      this.dataService.getGenres().subscribe((genres) => {
+        console.log(genres);
+        this.genreList = new Map(genres.map((item: { genre: any; color: any; }) => [item.genre, item.color]))
+      });
+  }
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;

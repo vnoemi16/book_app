@@ -1,5 +1,11 @@
 <app-search-form (searchSubmitted)="handleSearch($event)"></app-search-form>
-<button>Könyv hozzáadása</button>
+@if(authService.currentUserSig()?.role == "admin"){
+    <button (click)="addingBook=true">Könyv hozzáadása</button>
+        <div class="addBook">
+            <app-input-book (bookSubmitted)="submitBook($event)" [isOpened]="addingBook"></app-input-book>
+        </div>
+    
+}
 <div class="list">
     @for(book of books(); track book._id){
         <div class="book" (click)="openBook(book._id)">
@@ -8,7 +14,7 @@
             <p><strong>Megjelenés:</strong> {{ book.published | date }}</p>
             <div class="genres">
                 @for(genre of book.genres; track genre){
-                    <div class="genre">{{genre}}</div>
+                    <div class="genre" [style.background-color]="genreList.get(genre)">{{genre}}</div>
                 }
             </div>
             

@@ -4,7 +4,7 @@
     </button>
     @if(dropdownOpen){
     <div class="dropdown-menu">
-        @for(g of genreList; track g){
+        @for(g of genreList.keys(); track g){
         <div class="dropdown-item">
             <input type="checkbox" [value]="g" (change)="onGenreChange($event)">
             <span class="genre-label">{{ g }}</span>
