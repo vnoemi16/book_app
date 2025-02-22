@@ -1,17 +1,21 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const books_routes = require('./routes/books');
-const roles_routes = require('./routes/roles')
+const routes = require('./routes');
 
 const PORT = 3000;
 const app = express();
 
-app.use(cors());
+app.use(cors(
+    {
+        origin: "http://localhost:4200",
+        methods: "GET,POST,PUT,DELETE",
+        allowedHeaders: "Content-Type,Authorization"
+      }
+));
 app.use(express.json());
 
-app.use("/api/books", books_routes);
-app.use("/api/roles", roles_routes)
+app.use("/api", routes);
 
 app.get("/", (req, res) => {
     res.send("Hello");
