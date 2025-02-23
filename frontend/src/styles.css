@@ -1,14 +1,16 @@
 :root {
-    --darkest: #30424F;
-    --dark: #3B6064;
-    --middle: #678c93;
-    --light: #87BBA2;
-    --lightest: #EAF5EA;
+    --darkest: #171715;
+    --dark2: #4c4b42;
+    --dark: #484741;
+    --middle: #8da17f;
+    --light: #e1ddd4;
+    --lightest: #eae7dd;
 
 }
 
 html,
 body {
+    width: 100%;
     height: 100%;
 }
 

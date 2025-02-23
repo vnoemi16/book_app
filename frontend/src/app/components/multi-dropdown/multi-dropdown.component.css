@@ -19,6 +19,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+@media only screen and (max-width: 600px) {
+    .dropdown-button {
+        width: 100%;
+    }
+}
+
 .dropdown-menu ::-webkit-scrollbar{
     width: 10px;
     background-color: var(--darkest);
