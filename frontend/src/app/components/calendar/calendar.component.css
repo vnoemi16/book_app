@@ -1,0 +1,75 @@
+.calendar-container {
+    width: fit-content;
+    text-align: center;
+    margin: 1rem;
+    margin-bottom: 3rem;
+    border: 1px solid var(--darkest);
+    padding: 1rem;
+    background-color: rgb(240, 240, 240);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.calendar-toggle button {
+    margin: 5px;
+}
+
+button {
+    background-color: var(--middle);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.calendar-grid,
+.year-view {
+    display: grid;
+    gap: 5px;
+}
+
+.calendar-grid {
+    grid-template-columns: repeat(7, 1fr);
+    margin-top: 10px;
+}
+
+.year-view {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.day-label {
+    font-weight: bold;
+}
+
+.day {
+    width: 3rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 5px;
+    border-radius: 2px;
+}
+
+.month{
+    width: 7rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 5px;
+    border-radius: 2px;
+}
+
+.day span {
+    font-size: 1rem;
+}

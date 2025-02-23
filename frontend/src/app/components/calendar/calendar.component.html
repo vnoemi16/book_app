@@ -1,1 +1,45 @@
-<p>calendar works!</p>
+<div class="calendar-container">
+    <div class="calendar-header">
+      <button (click)="prevPage()">&lt;</button>
+      <h2>{{currentDate.getFullYear()}} {{viewMode === 'month' ? monthNames[currentDate.getMonth()]  : ''}}</h2>
+      <button (click)="nextPage()">&gt;</button>
+    </div>
+
+    <div class="calendar-toggle">
+        <button (click)="switchView('month')">Havi nézet</button>
+        <button (click)="switchView('year')">Éves nézet</button>
+    </div>
+
+    @if(viewMode == 'year'){
+
+        <div class="year-view">
+            @for(month of monthNames; track month){
+                <div class="month">
+                    {{month}}
+                </div>
+              }
+        </div>
+        
+    }
+
+    @if(viewMode == 'month'){
+        <div class="calendar-grid">
+            <div class="day-label">H</div>
+            <div class="day-label">K</div>
+            <div class="day-label">Sze</div>
+            <div class="day-label">Cs</div>
+            <div class="day-label">P</div>
+            <div class="day-label">Szo</div>
+            <div class="day-label">V</div>
+            @for(day of daysInMonth; track day){
+              <div class="day">
+                  @if(day){
+                      <span>{{ day.formatted }}</span>
+                  }
+              </div>
+            }
+          </div>
+    }
+  
+    
+  </div>

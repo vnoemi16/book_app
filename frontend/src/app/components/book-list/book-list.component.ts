@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Observable } from 'rxjs';
 import { DataService } from '../../services/data.service';
 import { Book } from '../../book';
 import { CommonModule } from '@angular/common';
@@ -8,11 +7,12 @@ import { AuthService } from '../../services/auth.service';
 import { InputBookComponent } from '../input-book/input-book.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MultiDropdownComponent } from '../multi-dropdown/multi-dropdown.component';
+import { CalendarComponent } from '../calendar/calendar.component';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [CommonModule, InputBookComponent, ReactiveFormsModule, MultiDropdownComponent],
+  imports: [CommonModule, InputBookComponent, ReactiveFormsModule, MultiDropdownComponent, CalendarComponent],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.css'
 })
