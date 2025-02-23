@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
@@ -11,11 +11,11 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './signup.component.html',
   styleUrl: '../auth.css'
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   fb = inject(FormBuilder);
   http = inject(HttpClient);
   authService = inject(AuthService);
-  
+
   router = inject(Router);
 
   form = this.fb.nonNullable.group({
@@ -25,21 +25,31 @@ export class SignupComponent {
   });
   errorMessage: string | null = null;
 
+  constructor(router: Router) { };
 
-  onSubmit(): void {
-    const rawForm = this.form.getRawValue();
-    this.authService.signUp(rawForm.email, rawForm.username, rawForm.password)
-    .subscribe({
-      next: () => {
-      this.router.navigate(["/"]);
-      },
-      error: (err) => {
-        this.errorMessage = err.code;
+  ngOnInit(): void {
+    this.authService.user$.subscribe((user) => {
+      if (user != null) {
+        this.router.navigate(["/books"]);
       }
     })
   }
 
-  goHome(){
+
+  onSubmit(): void {
+    const rawForm = this.form.getRawValue();
+    this.authService.signUp(rawForm.email, rawForm.username, rawForm.password)
+      .subscribe({
+        next: () => {
+          this.router.navigate(["/"]);
+        },
+        error: (err) => {
+          this.errorMessage = err.code;
+        }
+      })
+  }
+
+  goHome() {
     this.router.navigate(["/"]);
   }
 }

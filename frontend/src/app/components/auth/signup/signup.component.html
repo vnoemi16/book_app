@@ -1,16 +1,5 @@
 <h1>Regisztráció</h1>
 
-@if (errorMessage) {
-  <div>{{ errorMessage }}</div>
-}
-
-@if (authService.currentUserSig() != null){
-  <div>
-    Már be vagy jelentkezve.
-    <a class="homeLink" (click)="goHome()">Vissza a főoldalra</a>
-  </div>
-}
-@if (authService.currentUserSig() == null){
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div>
     <input type="text" placeholder="Név" formControlName="username" />
@@ -25,4 +14,3 @@
     <button type="submit">Regisztrálok</button>
   </div>
 </form>
-}
