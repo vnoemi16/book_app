@@ -1,12 +1,14 @@
 <div class="menu">
+    <a routerLink="/books">Főoldal</a>
     @if(authService.currentUserSig() != null){
-        <a>Listám</a>
-        <button>Kijelentkezés</button>
+    <a>Listám</a>
+    <button (click)="logout()">Kijelentkezés</button>
     }
     @if(authService.currentUserSig() == null){
-        <a routerLink="/login">Bejelentkezés</a>
-        <a routerLink="/signup">Regisztráció</a>
+    <a routerLink="/login">Bejelentkezés</a>
+    <a routerLink="/signup">Regisztráció</a>
     }
 </div>
+
 
 <router-outlet />
