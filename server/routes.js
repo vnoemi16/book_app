@@ -29,7 +29,7 @@ const Review = mongoose.model("reviews", mongoose.Schema(
         book_id: { type: String, required: true },
         stars: { type: Number, required: true, min: 1, max: 5 },
         review: { type: String, required: false },
-        date: {type: Date, required: true}
+        date: { type: Date, required: true }
     }
 )
 );
@@ -80,18 +80,18 @@ router.get("/books/:id/average", async (req, res) => {
 // könyv legfrissebb értékelései
 router.get("/books/:id/reviews", async (req, res) => {
     try {
-      const { id } = req.params;
-      const reviews = await Review.find({ book_id: id }).sort({ published: -1 }).limit(10);
-      res.status(200).json(reviews);
+        const { id } = req.params;
+        const reviews = await Review.find({ book_id: id }).sort({ published: -1 }).limit(10);
+        res.status(200).json(reviews);
     } catch (error) {
-      res.status(500).json({ message: "Error occurred while fetching ratings", error });
+        res.status(500).json({ message: "Error occurred while fetching ratings", error });
     }
-  });
+});
 
 // könyvek lekérdezése keresési feltételek alapján
 router.get("/books", async (req, res) => {
     try {
-        const { title, author, order, o, genres } = req.query;
+        const { title, author, order, o, genres, page = 1, limit = 20 } = req.query;
 
         const filter = {};
         if (title) {
@@ -104,15 +104,21 @@ router.get("/books", async (req, res) => {
             filter.genres = { $in: genres.split(",") };
         }
         if (order === "date" && o) {
-            const books = await Book.find(filter).sort({ published: Number(o) });
-            return res.status(200).json(books);
+            const books = await Book.find(filter).sort({ published: Number(o) }).skip((parseInt(page) - 1) * parseInt(limit));;
+            const allBooksCount = await Book.countDocuments(filter);
+            const pages = Math.ceil(allBooksCount / parseInt(limit));
+            return res.status(200).json({ books: books, pages: pages });
         }
         if (order === "title" && o) {
-            const books = await Book.find(filter).sort({ title: Number(o) });
-            return res.status(200).json(books);
+            const books = await Book.find(filter).sort({ title: Number(o) }).skip((parseInt(page) - 1) * parseInt(limit));
+            const allBooksCount = await Book.countDocuments(filter);
+            const pages = Math.ceil(allBooksCount / parseInt(limit));
+            return res.status(200).json({ books: books, pages: pages });
         }
-        const books = await Book.find(filter);
-        res.status(200).json(books)
+        const books = await Book.find(filter).skip((parseInt(page) - 1) * parseInt(limit));
+        const allBooksCount = await Book.countDocuments(filter);
+        const pages = Math.ceil(allBooksCount / parseInt(limit));
+        res.status(200).json({ books: books, pages: pages });
 
     }
     catch (e) {
@@ -186,7 +192,7 @@ router.post("/roles", async (req, res) => {
 // értékelés hozzáadása
 router.post("/reviews", async (req, res) => {
     try {
-        const review = new Review({...req.body, date: new Date()});
+        const review = new Review({ ...req.body, date: new Date() });
         const saved = await review.save();
         res.status(200).json(saved);
     }

@@ -39,9 +39,9 @@ export class BookListComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    this.dataService.getBooks({}).subscribe({
-      next: (data) => { this.books.set(data) },
-      error: (error) => { console.log(error) }
+    this.dataService.getBooks({page: 1, limit: 20}).subscribe((res) => {
+      this.books.set(res.books);
+      this.maxpage = res.pages;
     });
     this.dataService.getGenres().subscribe((genres) => {
       this.genreList = new Map(genres.map((item: { genre: any; color: any; }) => [item.genre, item.color]))
@@ -51,6 +51,11 @@ export class BookListComponent implements OnInit {
   getPage(i: number) {
     if ((i>0 && this.page < this.maxpage) || (i<0 && this.page > 1)){
       this.page += i;
+      this.dataService.getBooks({...this.form.getRawValue(), page: this.page, limit: 20})
+      .subscribe((res) => {
+        this.books.set(res.books);
+        this.maxpage = res.pages;
+      })
     }
     
   }
@@ -69,7 +74,10 @@ export class BookListComponent implements OnInit {
   }
 
   searchBooks() {
-    this.dataService.getBooks(this.form.getRawValue()).subscribe(data => this.books.set(data));
+    this.dataService.getBooks({...this.form.getRawValue(), page: this.page, limit: 20}).subscribe((res) => {
+      this.books.set(res.books);
+      this.maxpage = res.pages;
+    });
   }
 
   resetSearch() {
@@ -77,6 +85,6 @@ export class BookListComponent implements OnInit {
     this.form.controls.genres.setValue([]);
     this.form.controls.title.setValue("");
     this.form.controls.order.setValue("neither");
-    this.dataService.getBooks({}).subscribe(data => this.books.set(data));
+    this.dataService.getBooks({page: this.page, limit: 20}).subscribe(data => this.books.set(data));
   }
 }
