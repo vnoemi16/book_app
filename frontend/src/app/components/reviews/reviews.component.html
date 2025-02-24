@@ -1,6 +1,18 @@
 <div class="ratings">
-    <div style="width:300px">
+    <div>
         <div style="font-weight: bold; font-size: 1.2rem; margin-top: 1rem; margin-left: 0.5rem;">Átlagos értékelés: {{averageRating}}</div>
+        @if(hasRated){
+            <h3>Saját értékelésem:</h3>
+            <div class="review">
+                <span style="font-weight: bold;">5/{{ownRating.stars}}</span>
+                ({{ownRating.date | date}})
+                <div style="border-top: 1px solid var(--dark); padding: 0.5rem;">
+                    {{ownRating.review}}
+                </div>
+                
+            </div>
+        }
+        
         <p style="font-weight: bold; font-size: 1.1rem; margin-top: 1rem;">Legújabb értékelések:</p>
         <div class="reviews">
             @for(review of reviews(); track review.user_id){
@@ -17,18 +29,21 @@
     </div>
     <div>
         @if(authService.currentUserSig() != null){
-            <form [formGroup]="form" (ngSubmit)="onSubmit()">
-                <label>Vélemény</label>
-                <div class="rating">
-                    @for(star of [5,4,3,2,1]; track star){
-                        <span class="star" (click)="rate(star)" [class.selected]="star<=rating">
-                            ★
-                        </span>
-                    }
-                </div>
-                <textarea formControlName="review" required></textarea>
-                <button type="submit" [disabled]="form.invalid">Beküldés</button>
-            </form>
+            @if(!hasRated){
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <label>Vélemény</label>
+                    <div class="rating">
+                        @for(star of [5,4,3,2,1]; track star){
+                            <span class="star" (click)="rate(star)" [class.selected]="star<=rating">
+                                ★
+                            </span>
+                        }
+                    </div>
+                    <textarea formControlName="review" required></textarea>
+                    <button type="submit" [disabled]="form.invalid">Beküldés</button>
+                </form>
+            }
+        
         }
         
     </div>

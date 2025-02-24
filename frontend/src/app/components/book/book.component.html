@@ -7,7 +7,7 @@
                 <app-input-book (bookSubmitted)="updateSubmitted($event)" [isOpened]="updating"></app-input-book>
             </div>
             }
-        <div class="bookInfo">
+        <div class="bookInfo" style="width:300px;background-color: var(--lightest2);padding: 0.8rem;border-radius: 10px;box-shadow: 0 2px 10px rgba(94, 86, 77, 0.3);">
             <h1>
                 @if(authService.currentUserSig() != null){
                     <span (click)="toFavorites()" class="favoriteStar" [class.inFavorite]="isFavorite">★</span>

@@ -16,10 +16,13 @@
 
 .book:last-child {
     border-bottom: none;
-  }
+}
 
-  .favorite-title {
+.favorite-title {
     font-weight: bold;
     color: #444;
-  }
-  
+}
+
+h3 {
+    color: var(--dark);
+}

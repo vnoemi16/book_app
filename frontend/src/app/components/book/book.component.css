@@ -39,3 +39,7 @@ button {
 .inFavorite{
     color: var(--middle);
 }
+
+.admin{
+    margin-left: 2rem;
+}

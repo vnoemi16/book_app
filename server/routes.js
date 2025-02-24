@@ -215,6 +215,18 @@ router.post("/reviews", async (req, res) => {
     }
 });
 
+// értékelés lekérdezése
+router.get("/reviews", async (req, res) => {
+    try {
+        const {user_id, book_id} = req.query;
+        const review = await Review.findOne({user_id: user_id, book_id: book_id});
+        res.status(200).json(review);
+    }
+    catch (e) {
+        res.status(500).json({ message: "An error has occured", error: e });
+    }
+})
+
 
 // műfajok lekérdezése
 router.get("/genres", async (req, res) => {

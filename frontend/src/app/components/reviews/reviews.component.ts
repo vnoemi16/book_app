@@ -18,6 +18,8 @@ export class ReviewsComponent implements OnInit {
   dataService = inject(DataService);
   averageRating = 0;
   reviews = signal<any[]>([]);
+  hasRated = false;
+  ownRating: any;
 
 
   fb = inject(FormBuilder);
@@ -27,12 +29,21 @@ export class ReviewsComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataService.getBookAverageRating(this.book_id).subscribe((average) => this.averageRating = average.averageRating);
-    this.dataService.getBookReviews(this.book_id).subscribe((reviews) => this.reviews.set(reviews))
+    this.dataService.getBookReviews(this.book_id).subscribe((reviews) => this.reviews.set(reviews));
+    this.authService.user$.subscribe((user) => {
+      if (user != null){
+        this.dataService.getReview({user_id: user.uid, book_id: this.book_id}).subscribe((res)=> {
+          if (res != null){
+            this.hasRated = true;
+            this.ownRating = res;
+          }
+        });
+      }
+    })
   }
 
   rate(rating: number){
     this.rating = rating;
-    console.log(this.rating);
   }
 
   onSubmit() {
@@ -47,11 +58,14 @@ export class ReviewsComponent implements OnInit {
         stars: this.rating,
         review: this.form.getRawValue().review
       }
-      this.dataService.addReview(body).subscribe((_result) => {
+      this.dataService.addReview(body).subscribe((result) => {
+        this.hasRated = true;
+        this.ownRating = result;
         this.form.controls.review.setValue('');
         this.rating = 0;
         this.dataService.getBookAverageRating(this.book_id).subscribe((average) => this.averageRating = average.averageRating);
-        this.dataService.getBookReviews(this.book_id).subscribe((reviews) => this.reviews.set(reviews))
+        this.dataService.getBookReviews(this.book_id).subscribe((reviews) => this.reviews.set(reviews));
+
       });
     }
     

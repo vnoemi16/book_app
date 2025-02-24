@@ -179,7 +179,7 @@ button{
 }
 
 button:hover{
-    background-color: var(--lightest2);
+    background-color: var(--light);
 }
 
 .reset{

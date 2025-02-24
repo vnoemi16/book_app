@@ -50,7 +50,6 @@ export class DataService {
     if (paramList.year != null) httpParams = httpParams.append("year", paramList.year);
     if (paramList.month != null) httpParams = httpParams.append("month", paramList.month);
 
-    console.log(httpParams);
     return this.http.get(this.books_url, { params: httpParams });
   }
 
@@ -64,13 +63,17 @@ export class DataService {
     return this.http.post(this.books_url, body, { headers: { 'Content-Type': 'application/json' } });
   }
 
+  getReview(paramList: {user_id: string, book_id: string}): Observable<any>{
+    return this.http.get(this.reviews_url, {params: paramList});
+  }
+
   addReview(body: {
     user_id: string,
     username: string,
     book_id: string,
     stars: number,
     review: string,
-  }) {
+  }): Observable<any> {
     return this.http.post(this.reviews_url, body, { headers: { 'Content-Type': 'application/json' } });
   }
 
