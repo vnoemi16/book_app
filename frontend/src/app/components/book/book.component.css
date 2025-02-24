@@ -19,17 +19,21 @@
 button {
     padding: 10px;
     margin: 0.2rem;
-    background: var(--light);
-    border: 2px solid var(--darkest);
+    background: var(--dark);
+    border: 0;
     border-radius: 5px;
-    color: var(--darkest);
+    color: white;
     cursor: pointer;
   }
 
-.favorite{
+.favoriteStar{
     cursor: pointer;
     color: white;
     -webkit-text-stroke: 1px black;
+}
+
+.favoriteStar:hover{
+    color: var(--middle);
 }
 
 .inFavorite{

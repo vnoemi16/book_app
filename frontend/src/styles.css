@@ -4,8 +4,8 @@
     --dark: #484741;
     --middle: #8da17f;
     --light: #e1ddd4;
+    --lightest2: #f7f6f3;
     --lightest: #eae7dd;
-
 }
 
 html,
@@ -16,6 +16,6 @@ body {
 
 body {
     margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: "Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif;
     overflow-x: hidden;
 }

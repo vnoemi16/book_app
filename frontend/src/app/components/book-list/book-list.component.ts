@@ -5,14 +5,14 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { InputBookComponent } from '../input-book/input-book.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiDropdownComponent } from '../multi-dropdown/multi-dropdown.component';
 import { CalendarComponent } from '../calendar/calendar.component';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [CommonModule, InputBookComponent, ReactiveFormsModule, MultiDropdownComponent, CalendarComponent],
+  imports: [CommonModule, InputBookComponent, ReactiveFormsModule, MultiDropdownComponent, CalendarComponent, FormsModule],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.css'
 })
@@ -20,11 +20,13 @@ export class BookListComponent implements OnInit {
   authService = inject(AuthService);
   dataService = inject(DataService);
   books = signal<Book[]>([]);
+  booksByDate = signal<Book[]>([]);
   genreList: Map<string, string> = new Map();
 
   addingBook = false;
   page = 1;
   maxpage = 1;
+  genreInput = '';
 
   fb = inject(FormBuilder);
   form = this.fb.nonNullable.group({
@@ -47,6 +49,7 @@ export class BookListComponent implements OnInit {
       this.genreList = new Map(genres.map((item: { genre: any; color: any; }) => [item.genre, item.color]))
     });
   }
+
 
   getPage(i: number) {
     if ((i>0 && this.page < this.maxpage) || (i<0 && this.page > 1)){
@@ -86,5 +89,14 @@ export class BookListComponent implements OnInit {
     this.form.controls.title.setValue("");
     this.form.controls.order.setValue("neither");
     this.dataService.getBooks({page: this.page, limit: 20}).subscribe(data => this.books.set(data));
+  }
+
+  addGenre(){
+    const g = this.genreInput.split(";");
+    if (g.length == 2){
+      this.dataService.addGenre({genre: g[0], color: g[1]}).subscribe((res) => {
+        this.genreInput = '';
+      })
+    }
   }
 }

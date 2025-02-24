@@ -1,52 +1,37 @@
 <div class="main">
-    <div class="bookInfo">
-        <h1>
-            {{selectedBook.title}}
-        </h1>
-        <p>
-            {{selectedBook.authors.join(", ")}}
-            Megjelenés éve: {{selectedBook.published | date: "yyyy"}}
-        </p>
-        <p>
-            {{selectedBook.genres.join(", ")}}
-        </p>
-        <p>
-            {{selectedBook.description}}
-        </p>
+    <div class="left">
+        @if(authService.currentUserSig()?.role == "admin"){
+            <div class="admin">
+                <button (click)="deleteBook()">Könyv törlése</button>
+                <button (click)="openUpdate()">{{updateButton}}</button>
+                <app-input-book (bookSubmitted)="updateSubmitted($event)" [isOpened]="updating"></app-input-book>
+            </div>
+            }
+        <div class="bookInfo">
+            <h1>
+                @if(authService.currentUserSig() != null){
+                    <span (click)="toFavorites()" class="favoriteStar" [class.inFavorite]="isFavorite">★</span>
+                }
+                {{selectedBook.title}}
+            </h1>
+            <p>
+                Szerző(k): {{selectedBook.authors.join(", ")}}
+                
+            </p>
+            <p>
+                Megjelenés éve: {{selectedBook.published | date: "yyyy"}}
+            </p>
+            <p>
+                Műfajok: {{selectedBook.genres.join(", ")}}
+            </p>
+            <p style="border-width: 1px 0px 0px 0px; border-style: solid; border-color: var(--darkest);padding-top:0.5rem">
+                {{selectedBook.description}}
+            </p>
+        </div>
     </div>
     <div class="right">
-        <div class="admin">
-            <button (click)="deleteBook()">Könyv törlése</button>
-            <button (click)="openUpdate()">{{updateButton}}</button>
-            @if(updating){
-                <form [formGroup]="form" (ngSubmit)="onSubmit()">
-                    <label>Cím</label>
-                    <input type="text" formControlName="title" required>
-        
-                    <label>Szerzők (vesszővel elválasztva)</label>
-                    <input type="text" formControlName="authors" required>
-        
-                    <label>Megjelenés dátuma</label>
-                    <input type="date" formControlName="published" required>
-        
-                    <label>Leírás</label>
-                    <textarea formControlName="description" required></textarea>
-        
-                    <app-multi-dropdown (genresChanged)="genresChanged($event)"></app-multi-dropdown>
-        
-                    <button type="submit" [disabled]="form.invalid">Mentés</button>
-                </form>
-            }
-        </div>
-        
-        
-        <div class="bookReview">
-            <app-reviews></app-reviews>
-        </div>
+            <div class="bookReview">
+                <app-reviews [book_id]="id"></app-reviews>
+            </div>
     </div>
-
-
-
-
 </div>
-

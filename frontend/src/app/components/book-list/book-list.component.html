@@ -28,11 +28,12 @@
 
 @if(authService.currentUserSig()?.role == "admin"){
     <div class="adminButtons">
-        <button (click)="addingBook=true">Könyv hozzáadása</button>
+        <button (click)="addingBook=true">Könyv hozzáadása...</button>
         <div class="addBook">
             <app-input-book (bookSubmitted)="submitBook($event)" [isOpened]="addingBook"></app-input-book>
         </div>
-        <button>Műfaj hozzáadása</button>
+        <input type="text" placeholder="műfaj;szín-hex-kód" [(ngModel)]="genreInput" style="width:8rem">
+        <button (click)="addGenre()">Műfaj hozzáadása</button>
     </div>
 }
 

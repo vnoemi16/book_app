@@ -19,7 +19,6 @@ export class MultiDropdownComponent implements OnInit {
 
   ngOnInit(): void {
       this.dataService.getGenres().subscribe((genres) => {
-        console.log(genres);
         this.genreList = new Map(genres.map((item: { genre: any; color: any; }) => [item.genre, item.color]))
       });
   }

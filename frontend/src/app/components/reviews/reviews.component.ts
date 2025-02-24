@@ -47,8 +47,12 @@ export class ReviewsComponent implements OnInit {
         stars: this.rating,
         review: this.form.getRawValue().review
       }
-      console.log("review sent.");
-      this.dataService.addReview(body).subscribe((_result) => console.log("Review added."));
+      this.dataService.addReview(body).subscribe((_result) => {
+        this.form.controls.review.setValue('');
+        this.rating = 0;
+        this.dataService.getBookAverageRating(this.book_id).subscribe((average) => this.averageRating = average.averageRating);
+        this.dataService.getBookReviews(this.book_id).subscribe((reviews) => this.reviews.set(reviews))
+      });
     }
     
   }

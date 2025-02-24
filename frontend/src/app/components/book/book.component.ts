@@ -1,84 +1,91 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BookService } from '../../services/book.service';
+import { DataService } from '../../services/data.service';
 import { ReviewsComponent } from '../reviews/reviews.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MultiDropdownComponent } from '../multi-dropdown/multi-dropdown.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { InputBookComponent } from '../input-book/input-book.component';
 
 @Component({
   selector: 'app-book',
   standalone: true,
-  imports: [ReviewsComponent, MultiDropdownComponent, ReactiveFormsModule, CommonModule],
+  imports: [ReviewsComponent, ReactiveFormsModule, CommonModule, InputBookComponent],
   templateUrl: './book.component.html',
   styleUrl: './book.component.css'
 })
 export class BookComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
-  bookService = inject(BookService);
+  dataService = inject(DataService);
+  authService = inject(AuthService);
 
   id!: string;
   selectedBook: any;
 
+  isFavorite = false;
+
   updateButton = "Adatok módosítása";
   updating = false;
 
-  fb = inject(FormBuilder);
-  form!: FormGroup;
 
   constructor(private router: Router) { }
 
 
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.params["id"];
-    this.bookService.getBookById(this.id).subscribe(data => {
-      console.log(data);
+    this.dataService.getBookById(this.id).subscribe(data => {
       this.selectedBook = data;
-      this.form = this.fb.nonNullable.group({
-        title: [this.selectedBook.title, Validators.required],
-        authors: [this.selectedBook.authors.join(", "), Validators.required],
-        description: [this.selectedBook.description, Validators.required],
-        genres: [this.selectedBook.genres, Validators.required],
-        published: [this.selectedBook.published.toISOString().split('T')[0], Validators.required]
-      });
     });
-    
+    this.authService.user$.subscribe((user) => {
+      if (user){
+        this.dataService.isFavorite({user_id: user.uid, book_id: this.selectedBook._id}).subscribe((res) => {
+          if (res.found === true){
+            this.isFavorite = true;
+          }
+          else{
+            this.isFavorite = false;
+          }
+        });
+      }
+    });  
   }
 
   deleteBook() {
-    this.bookService.deleteBook(this.id);
+    this.dataService.deleteBook(this.id).subscribe((deleted) => console.log("Book was deleted."));
     this.router.navigate(["/"]);
   }
 
   openUpdate() {
-    if (!this.updating){
-      this.updateButton = "Mégsem";
       this.updating = true;
-    }
-    else{
-      this.updating = false;
-      this.updateButton = "Adatok módosítása";
-    }
-    
+      console.log(this.updating);
   }
 
-  genresChanged(item: any) {
-    this.form.controls['genres'].setValue(item);
-  }
 
-  onSubmit(){
-    const rawForm = this.form.getRawValue();
-    this.bookService.updateBook(this.id, rawForm);
-    this.bookService.getBookById(this.id).subscribe(data => this.selectedBook = data);
+  updateSubmitted(e: any){
+    this.dataService.updateBook(this.id, e).subscribe((updated) => {
+      this.dataService.getBookById(this.id).subscribe(data => this.selectedBook = data);
+    })
     this.updating = false;
     this.updateButton = "Adatok módosítása";
-    this.form = this.fb.nonNullable.group({
-      title: [this.selectedBook.title, Validators.required],
-      authors: [this.selectedBook.authors.join(", "), Validators.required],
-      description: [this.selectedBook.description, Validators.required],
-      genres: [this.selectedBook.genres, Validators.required],
-      published: [this.selectedBook.published, Validators.required]
-    });
+  }
+
+  toFavorites(){
+    const id = this.authService.currentUserSig()?.id;
+    {
+      if(id){
+        this.dataService.isFavorite({user_id: id, book_id: this.selectedBook._id}).subscribe((res) => {
+          if (res.found === true){
+            this.dataService.removeFavorite({user_id: id, book_id: this.selectedBook._id})
+            .subscribe((res) => {this.isFavorite = false});
+          }
+          if(res.found === false){
+            this.dataService.addFavorite({user_id: id, book_id: this.selectedBook._id})
+            .subscribe((res) => {this.isFavorite = true});
+          }
+        })
+      }
+    }
+    
   }
 
 

@@ -11,7 +11,7 @@
     </div>
 
     @if(viewMode == 'year'){
-
+        <!--Éves nézetben még nem jelennek meg a könyvek-->
         <div class="year-view">
             @for(month of monthNames; track month){
                 <div class="month">
@@ -34,8 +34,18 @@
             @for(day of daysInMonth; track day){
               <div class="day">
                   @if(day){
-                      <span>{{ day.formatted }}</span>
+                    <div>
+                        {{ day.formatted }}
+                    </div>
+                      
+                      @if(booksByDate[day.num]){
+                        @for(book of booksByDate[day.num]; track book._id){
+                            <div style="cursor: pointer; background-color: var(--light); height: fit-content;" (click)="router.navigate(['/book', book._id])">{{ book.title }}</div>
+                        }
+                      }
+                      
                   }
+                  
               </div>
             }
           </div>

@@ -91,7 +91,21 @@ router.get("/books/:id/reviews", async (req, res) => {
 // könyvek lekérdezése keresési feltételek alapján
 router.get("/books", async (req, res) => {
     try {
-        const { title, author, order, o, genres, page = 1, limit = 20 } = req.query;
+        let { title, author, order, o, genres, page = 1, limit = 20, year, month } = req.query;
+
+        if (year && month) {
+            year = parseInt(year);
+            month = parseInt(month);
+            const start = new Date(year, month, 1);
+            const end = new Date(year, month + 1, 0);
+            const books = await Book.find({
+                published: {
+                    $gte: start,
+                    $lte: end
+                }
+            });
+            return res.status(200).json({ books: books, pages: 0 });
+        }
 
         const filter = {};
         if (title) {
@@ -104,18 +118,18 @@ router.get("/books", async (req, res) => {
             filter.genres = { $in: genres.split(",") };
         }
         if (order === "date" && o) {
-            const books = await Book.find(filter).sort({ published: Number(o) }).skip((parseInt(page) - 1) * parseInt(limit));;
+            const books = await Book.find(filter).sort({ published: Number(o) }).skip((parseInt(page) - 1) * parseInt(limit)).limit(parseInt(limit));
             const allBooksCount = await Book.countDocuments(filter);
             const pages = Math.ceil(allBooksCount / parseInt(limit));
             return res.status(200).json({ books: books, pages: pages });
         }
         if (order === "title" && o) {
-            const books = await Book.find(filter).sort({ title: Number(o) }).skip((parseInt(page) - 1) * parseInt(limit));
+            const books = await Book.find(filter).sort({ title: Number(o) }).skip((parseInt(page) - 1) * parseInt(limit)).limit(parseInt(limit));
             const allBooksCount = await Book.countDocuments(filter);
             const pages = Math.ceil(allBooksCount / parseInt(limit));
             return res.status(200).json({ books: books, pages: pages });
         }
-        const books = await Book.find(filter).skip((parseInt(page) - 1) * parseInt(limit));
+        const books = await Book.find(filter).skip((parseInt(page) - 1) * parseInt(limit)).limit(parseInt(limit));
         const allBooksCount = await Book.countDocuments(filter);
         const pages = Math.ceil(allBooksCount / parseInt(limit));
         res.status(200).json({ books: books, pages: pages });
@@ -225,12 +239,26 @@ router.post("/genres", async (req, res) => {
     }
 });
 
+// listában van-e
+router.get("/favorites", async (req, res) => {
+    const { user_id, book_id } = req.query;
+    const found = await Favorite.findOne({ user_id: user_id, book_id: book_id });
+    if (found != null) {
+        res.status(200).json({ found: true });
+    }
+    else {
+        res.status(200).json({ found: false });
+    }
+})
+
 // felhasználó listájának lekérdezése
 router.get("/favorites/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const favorites = await Favorite.find({ user_id: id });
-        res.status(200).json(favorites);
+        const book_ids = favorites.map(fav => fav.book_id);
+        const books = await Book.find({ _id: { $in: book_ids } });
+        res.status(200).json(books);
     }
     catch (e) {
         res.status(500).json({ message: "An error has occured", error: e });
@@ -250,10 +278,10 @@ router.post("/favorites", async (req, res) => {
 });
 
 // listából törlés
-router.delete("/favorites/:id", async (req, res) => {
+router.delete("/favorites", async (req, res) => {
     try {
-        const id = req.params.id;
-        const deleted = await Favorite.findByIdAndDelete(id);
+        const { user_id, book_id } = req.query;
+        const deleted = await Favorite.findOneAndDelete({ user_id: user_id, book_id: book_id });
         res.status(200).json(deleted);
     }
     catch (e) {

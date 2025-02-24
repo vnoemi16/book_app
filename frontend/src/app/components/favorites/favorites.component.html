@@ -1,0 +1,17 @@
+<div class="favorites">
+    @if(favorites.length == 0){
+    <p>
+        Még nem jelöltél kedvencednek egy könyvet sem.
+        Az adott könyv adatlapján, a cím melletti csillagra kattintva teheted ezt meg.
+    </p>
+    }
+    @else{
+    <ul>
+        @for(favorite of favorites; track favorite.id){
+        <li class="book" (click)="router.navigate(['/book/' + favorite._id ])" style="cursor: pointer;">
+            <span class="title">{{favorite.title}}</span>
+        </li>
+        }
+    </ul>
+    }
+</div>

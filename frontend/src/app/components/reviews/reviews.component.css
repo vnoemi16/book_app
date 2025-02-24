@@ -5,6 +5,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 2rem;
+    padding: 0.3rem;
+    border-radius: 10px;
 }
 
 .rating {
@@ -74,11 +76,13 @@ button[type="submit"]{
 
 .reviews{
     border: 1px solid var(--darkest);
-    padding: 0.3rem;
-
+    max-height: 30rem;
+    overflow-y: auto;
+    background-color: white;
 }
 
 .review{
+    margin: 0.3rem;
     border-width: 1px;
     border-style: 0px 0px 1px 0px;
     border-color: var(--dark);

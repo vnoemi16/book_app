@@ -32,7 +32,11 @@ export class DataService {
     author?: string,
     genres?: string[],
     order?: string,
-    o?: boolean
+    o?: boolean,
+    page?: number,
+    limit?: number,
+    year?: number,
+    month?: number
   }): Observable<any> {
     let httpParams = new HttpParams();
     if (paramList.title) httpParams = httpParams.append("title", paramList.title);
@@ -41,8 +45,13 @@ export class DataService {
     if (paramList.order) httpParams = httpParams.append("order", paramList.order);
     if (paramList.o === false) httpParams = httpParams.append("o", "-1");
     if (paramList.o === true) httpParams = httpParams.append("o", "1");
+    if (paramList.page != null) httpParams = httpParams.append("page", paramList.page);
+    if (paramList.limit != null) httpParams = httpParams.append("limit", paramList.limit);
+    if (paramList.year != null) httpParams = httpParams.append("year", paramList.year);
+    if (paramList.month != null) httpParams = httpParams.append("month", paramList.month);
 
-    return this.http.get<Book[]>(this.books_url, { params: httpParams });
+    console.log(httpParams);
+    return this.http.get(this.books_url, { params: httpParams });
   }
 
   addBook(body: {
@@ -61,7 +70,7 @@ export class DataService {
     book_id: string,
     stars: number,
     review: string,
-  }){
+  }) {
     return this.http.post(this.reviews_url, body, { headers: { 'Content-Type': 'application/json' } });
   }
 
@@ -87,10 +96,47 @@ export class DataService {
     user_id: string,
     role: string
   }) {
-    this.http.post(this.roles_url, body);
+    return this.http.post(this.roles_url, body);
   }
 
-  getGenres(): Observable<any>{
+  getGenres(): Observable<any> {
     return this.http.get(this.genres_url);
+  }
+
+  addGenre(body:{
+    genre:string,
+    color:string
+  }){
+    return this.http.post(this.genres_url, body);
+  }
+
+  isFavorite(paramList: { user_id: string, book_id: string }): Observable<any> {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append("user_id", paramList.user_id);
+    httpParams = httpParams.append("book_id", paramList.book_id);
+    return this.http.get(this.favorites_url, { params: httpParams });
+  }
+
+  getFavorites(id: string): Observable<any> {
+    return this.http.get(this.favorites_url + "/" + id);
+  }
+
+  addFavorite(body:
+    {
+      user_id: string,
+      book_id: string
+    }) {
+    return this.http.post(this.favorites_url, body);
+  }
+
+  removeFavorite(paramList:
+    {
+      user_id: string,
+      book_id: string
+    }) {
+      let httpParams = new HttpParams();
+    httpParams = httpParams.append("user_id", paramList.user_id);
+    httpParams = httpParams.append("book_id", paramList.book_id);
+    return this.http.delete(this.favorites_url, { params: httpParams });
   }
 }

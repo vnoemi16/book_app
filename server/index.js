@@ -3,6 +3,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const routes = require('./routes');
 
+require('dotenv').config();
+
 const PORT = 3000;
 const app = express();
 
@@ -33,7 +35,7 @@ app.listen(PORT, (error) => {
 main().catch((error) => console.log(error));
 
 async function main(){
-    const connection = "mongodb+srv://vnoemi595:s1p5IrQdv5reRqIA@cluster0.wsl89.mongodb.net/book_app?retryWrites=true&w=majority&appName=Cluster0"
+    const connection = process.env.MONGODB_CONNECTION;
     await mongoose.connect(connection);
     mongoose.set("strictQuery", true);
     console.log("Connected to databse.")

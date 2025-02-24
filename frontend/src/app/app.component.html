@@ -1,7 +1,7 @@
 <div class="menu">
     <a routerLink="/books">Főoldal</a>
     @if(authService.currentUserSig() != null){
-    <a>Listám</a>
+    <a routerLink="/favorites">Listám</a>
     <button (click)="logout()">Kijelentkezés</button>
     }
     @if(authService.currentUserSig() == null){
